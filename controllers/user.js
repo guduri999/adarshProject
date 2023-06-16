@@ -1,8 +1,17 @@
 import userModal from "../modals/index.js";
+// import { raw } from "express";
+import raw from 'raw-body'
 
 export const userAuthentication = async (req, res) => {
 
-    const { username, password } = req.body.requestparameters
+    var body = (await raw(req));
+
+    body = body.toString();
+
+    body = JSON.parse(body);
+
+    const { username, password } = body.requestparameters
+
     const data = await userModal.findOne({ mobile: username, password: password })
 
     if (data) {
@@ -26,6 +35,26 @@ export const userAuthentication = async (req, res) => {
             "result": [],
             "requestname": "login"
         })
+    }
+
+}
+
+export const fetchCustomer = async (req, res) => {
+
+    var body = (await raw(req));
+
+    body = body.toString();
+
+    body = JSON.parse(body);
+
+    console.log(body.requestparameters)
+
+    const data = await userModal.findOne(body.requestparameters)
+
+    if (data) {
+
+    } else {
+        await res.status(200).json({ Response: body.requestparameters })
     }
 
 }
